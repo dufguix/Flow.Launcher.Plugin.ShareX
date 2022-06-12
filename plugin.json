@@ -1,12 +1,12 @@
 {
-    "ID": "75763350-A89D-4942-B697-14875D94C222",
-    "ActionKeyword": "shx",
-    "Name": "ShareX_Flow_Plugin",
-    "Description": "Run ShareX capture, OCR, ...",
-    "Author": "Dufguix",
-    "Version": "1.0.0",
-    "Language": "csharp",
-    "Website": "https://github.com/Dufguix/Flow.Launcher.Plugin.ShareX_Flow_Plugin",
-    "IcoPath": "icon.png",
-    "ExecuteFileName": "Flow.Launcher.Plugin.ShareX_Flow_Plugin.dll"
+  "ID": "75763350-A89D-4942-B697-14875D94C222",
+  "ActionKeyword": "shx",
+  "Name": "ShareX_Flow_Plugin",
+  "Description": "Run ShareX capture, OCR, ...",
+  "Author": "Dufguix",
+  "Version": "1.0.0",
+  "Language": "csharp",
+  "Website": "https://github.com/dufguix/Flow.Launcher.Plugin.ShareX",
+  "IcoPath": "icon.png",
+  "ExecuteFileName": "Flow.Launcher.Plugin.ShareX_Flow_Plugin.dll"
 }
