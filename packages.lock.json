@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net5.0-windows7.0": {
+      "Flow.Launcher.Plugin": {
+        "type": "Direct",
+        "requested": "[2.1.1, )",
+        "resolved": "2.1.1",
+        "contentHash": "KXfeYJr2+8IemOi79ywqf+xR/9rPRCCPIeg/SEatjB0gcutz0Ff9jCNtDyV1lMrL0yXT0mH9IGdK3CASwe8qlw==",
+        "dependencies": {
+          "JetBrains.Annotations": "2021.2.0",
+          "PropertyChanged.Fody": "3.4.0"
+        }
+      },
+      "Fody": {
+        "type": "Transitive",
+        "resolved": "6.5.1",
+        "contentHash": "DEw9rPG5vrpaK4vPPze0f4q6Zd0mfzjGNKy49nrmINkftIHpkyf8KH+uC/qF8y6v1askPWu9NbJS9bkmN5wXaA=="
+      },
+      "JetBrains.Annotations": {
+        "type": "Transitive",
+        "resolved": "2021.2.0",
+        "contentHash": "kKSyoVfndMriKHLfYGmr0uzQuI4jcc3TKGyww7buJFCYeHb/X0kodYBPL7n9454q7v6ASiRmDgpPGaDGerg/Hg=="
+      },
+      "PropertyChanged.Fody": {
+        "type": "Transitive",
+        "resolved": "3.4.0",
+        "contentHash": "IAZyq0uolKo2WYm4mjx+q7A8fSGFT0x2e1s3y+ODn4JI0kqTDoo9GF2tdaypUzRFJZfdMxfC5HZW9QzdJLtOnA==",
+        "dependencies": {
+          "Fody": "6.5.1"
+        }
+      }
+    }
+  }
+}
