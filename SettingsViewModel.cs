@@ -2,16 +2,16 @@ namespace Flow.Launcher.Plugin.ShareX_Flow_Plugin
 {
     public class SettingsViewModel(Settings settings) : BaseModel
     {
-        private readonly Settings Settings = settings;
+        private readonly Settings _settings = settings;
 
         public string SharexPath
         {
-            get => Settings.SharexPath;
+            get => _settings.SharexPath;
             set
             {
-                if (Settings.SharexPath != value)
+                if (_settings.SharexPath != value)
                 {
-                    Settings.SharexPath = value;
+                    _settings.SharexPath = value;
                     OnPropertyChanged();
                 }
             }
@@ -19,12 +19,12 @@ namespace Flow.Launcher.Plugin.ShareX_Flow_Plugin
 
         public bool AutoClose
         {
-            get => Settings.AutoClose;
+            get => _settings.AutoClose;
             set
             {
-                if (Settings.AutoClose != value)
+                if (_settings.AutoClose != value)
                 {
-                    Settings.AutoClose = value;
+                    _settings.AutoClose = value;
                     OnPropertyChanged();
                 }
             }
