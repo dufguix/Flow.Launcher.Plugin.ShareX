@@ -3,85 +3,87 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Controls;
 
 namespace Flow.Launcher.Plugin.ShareX_Flow_Plugin
 {
-    public class ShareX_Flow_Plugin : IPlugin
+    public class ShareX_Flow_Plugin : IPlugin, ISettingProvider
     {
         private PluginInitContext _context;
-        private String _sharexExe;
-        private String _sharexPath;
+        private string _sharexExe;
+        private Settings _settings;
+        private SettingsViewModel _viewModel;
         private List<SharexCommand> _sharexCommands;
 
         public void Init(PluginInitContext context)
         {
             _context = context;
+            _settings = context.API.LoadSettingJsonStorage<Settings>();
+            _viewModel = new SettingsViewModel(_settings);
             _sharexExe = "ShareX.exe";
-            _sharexPath = "C:\\Program Files\\ShareX\\";
-            _sharexCommands = new List<SharexCommand>
-            {
-                new SharexCommand {Title = "FileUpload", SubTitle="Upload file", Command="-FileUpload", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "FolderUpload", SubTitle="Upload folder", Command="-FolderUpload", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "ClipboardUpload", SubTitle="Upload from clipboard", Command="-ClipboardUpload", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "ClipboardUploadWithContentViewer", SubTitle="Upload from clipboard with content viewer", Command="-ClipboardUploadWithContentViewer", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "UploadText", SubTitle="Upload text", Command="-UploadText", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "UploadURL", SubTitle="Upload from URL", Command="-UploadURL", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "DragDropUpload", SubTitle="Drag and drop upload", Command="-DragDropUpload", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "ShortenURL", SubTitle="Shorten URL", Command="-ShortenURL", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "TweetMessage", SubTitle="Tweet message", Command="-TweetMessage", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "StopUploads", SubTitle="Stop all active uploads", Command="-StopUploads", Category=SharexCommand.Cat.Upload, IcoPath=""},
-                new SharexCommand {Title = "PrintScreen", SubTitle="Capture entire screen", Command="-PrintScreen", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "ActiveWindow", SubTitle="Capture active window", Command="-ActiveWindow", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "ActiveMonitor", SubTitle="Capture active monitor", Command="-ActiveMonitor", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "RectangleRegion", SubTitle="Capture region", Command="-RectangleRegion", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "RectangleLight", SubTitle="Capture region (Light)", Command="-RectangleLight", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "RectangleTransparent", SubTitle="Capture region (Transparent)", Command="-RectangleTransparent", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "CustomRegion", SubTitle="Capture pre configured region", Command="-CustomRegion", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "LastRegion", SubTitle="Capture last region", Command="-LastRegion", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "ScrollingCapture", SubTitle="Scrolling capture", Command="-ScrollingCapture", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "AutoCapture", SubTitle="Auto capture", Command="-AutoCapture", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "StartAutoCapture", SubTitle="Start auto capture using last region", Command="-StartAutoCapture", Category=SharexCommand.Cat.ScreenCapture, IcoPath=""},
-                new SharexCommand {Title = "ScreenRecorder", SubTitle="Start/Stop screen recording", Command="-ScreenRecorder", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "ScreenRecorderActiveWindow", SubTitle="Start/Stop screen recording using active window region", Command="-ScreenRecorderActiveWindow", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "ScreenRecorderCustomRegion", SubTitle="Start/Stop screen recording using pre configured region", Command="-ScreenRecorderCustomRegion", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "StartScreenRecorder", SubTitle="Start/Stop screen recording using last region", Command="-StartScreenRecorder", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "ScreenRecorderGIF", SubTitle="Start/Stop screen recording (GIF)", Command="-ScreenRecorderGIF", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "ScreenRecorderGIFActiveWindow", SubTitle="Start/Stop screen recording (GIF) using active window region", Command="-ScreenRecorderGIFActiveWindow", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "ScreenRecorderGIFCustomRegion", SubTitle="Start/Stop screen recording (GIF) using pre configured region", Command="-ScreenRecorderGIFCustomRegion", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "StartScreenRecorderGIF", SubTitle="Start/Stop screen recording (GIF) using last region", Command="-StartScreenRecorderGIF", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "StopScreenRecording", SubTitle="Stop screen recording", Command="-StopScreenRecording", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "AbortScreenRecording", SubTitle="Abort screen recording", Command="-AbortScreenRecording", Category=SharexCommand.Cat.ScreenRecord, IcoPath=""},
-                new SharexCommand {Title = "ColorPicker", SubTitle="Color picker", Command="-ColorPicker", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "ScreenColorPicker", SubTitle="Screen color picker", Command="-ScreenColorPicker", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "Ruler", SubTitle="Ruler", Command="-Ruler", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "ImageEditor", SubTitle="Image editor", Command="-ImageEditor", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "ImageEffects", SubTitle="Image effects", Command="-ImageEffects", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "ImageViewer", SubTitle="", Command="-ImageViewer", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "ImageCombiner", SubTitle="Image combiner", Command="-ImageCombiner", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "ImageSplitter", SubTitle="Image splitter", Command="-ImageSplitter", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "ImageThumbnailer", SubTitle="Image thumbnailer", Command="-ImageThumbnailer", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "VideoConverter", SubTitle="Video converter", Command="-VideoConverter", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "VideoThumbnailer", SubTitle="Video thumbnailer", Command="-VideoThumbnailer", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "OCR", SubTitle="Text capture (OCR)", Command="-OCR", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "QRCode", SubTitle="QR code", Command="-QRCode", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "QRCodeDecodeFromScreen", SubTitle="QR code (Decode from screen)", Command="-QRCodeDecodeFromScreen", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "HashCheck", SubTitle="Hash check", Command="-HashCheck", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "IndexFolder", SubTitle="Index folder", Command="-IndexFolder", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "ClipboardViewer", SubTitle="Clipboard viewer", Command="-ClipboardViewer", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "BorderlessWindow", SubTitle="", Command="-BorderlessWindow", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "InspectWindow", SubTitle="Inspect window", Command="-InspectWindow", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "MonitorTest", SubTitle="Monitor test", Command="-MonitorTest", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "DNSChanger", SubTitle="DNS changer", Command="-DNSChanger", Category=SharexCommand.Cat.Tools, IcoPath=""},
-                new SharexCommand {Title = "DisableHotkeys", SubTitle="Disable/Enable hotkeys", Command="-DisableHotkeys", Category=SharexCommand.Cat.Other, IcoPath=""},
-                new SharexCommand {Title = "OpenMainWindow", SubTitle="Open main window", Command="-OpenMainWindow", Category=SharexCommand.Cat.Other, IcoPath=""},
-                new SharexCommand {Title = "OpenScreenshotsFolder", SubTitle="Open screenshots folder", Command="-OpenScreenshotsFolder", Category=SharexCommand.Cat.Other, IcoPath=""},
-                new SharexCommand {Title = "OpenHistory", SubTitle="Open history window", Command="-OpenHistory", Category=SharexCommand.Cat.Other, IcoPath=""},
-                new SharexCommand {Title = "OpenImageHistory", SubTitle="Open image history window", Command="-OpenImageHistory", Category=SharexCommand.Cat.Other, IcoPath=""},
-                new SharexCommand {Title = "ToggleActionsToolbar", SubTitle="Toggle actions toolbar", Command="-ToggleActionsToolbar", Category=SharexCommand.Cat.Other, IcoPath=""},
-                new SharexCommand {Title = "ToggleTrayMenu", SubTitle="Toggle tray menu", Command="-ToggleTrayMenu", Category=SharexCommand.Cat.Other, IcoPath=""},
-                new SharexCommand {Title = "ExitShareX", SubTitle="Exit ShareX", Command="-ExitShareX", Category=SharexCommand.Cat.Other, IcoPath=""}
-            };
-
+            _sharexCommands =
+            [
+                new() {Title = "FileUpload", SubTitle="Upload file", Command="-FileUpload", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "FolderUpload", SubTitle="Upload folder", Command="-FolderUpload", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "ClipboardUpload", SubTitle="Upload from clipboard", Command="-ClipboardUpload", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "ClipboardUploadWithContentViewer", SubTitle="Upload from clipboard with content viewer", Command="-ClipboardUploadWithContentViewer", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "UploadText", SubTitle="Upload text", Command="-UploadText", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "UploadURL", SubTitle="Upload from URL", Command="-UploadURL", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "DragDropUpload", SubTitle="Drag and drop upload", Command="-DragDropUpload", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "ShortenURL", SubTitle="Shorten URL", Command="-ShortenURL", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "TweetMessage", SubTitle="Tweet message", Command="-TweetMessage", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "StopUploads", SubTitle="Stop all active uploads", Command="-StopUploads", Category=SharexCommand.CategoryType.Upload, IcoPath=""},
+                new() {Title = "PrintScreen", SubTitle="Capture entire screen", Command="-PrintScreen", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "ActiveWindow", SubTitle="Capture active window", Command="-ActiveWindow", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "ActiveMonitor", SubTitle="Capture active monitor", Command="-ActiveMonitor", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "RectangleRegion", SubTitle="Capture region", Command="-RectangleRegion", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "RectangleLight", SubTitle="Capture region (Light)", Command="-RectangleLight", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "RectangleTransparent", SubTitle="Capture region (Transparent)", Command="-RectangleTransparent", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "CustomRegion", SubTitle="Capture pre configured region", Command="-CustomRegion", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "LastRegion", SubTitle="Capture last region", Command="-LastRegion", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "ScrollingCapture", SubTitle="Scrolling capture", Command="-ScrollingCapture", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "AutoCapture", SubTitle="Auto capture", Command="-AutoCapture", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "StartAutoCapture", SubTitle="Start auto capture using last region", Command="-StartAutoCapture", Category=SharexCommand.CategoryType.ScreenCapture, IcoPath=""},
+                new() {Title = "ScreenRecorder", SubTitle="Start/Stop screen recording", Command="-ScreenRecorder", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "ScreenRecorderActiveWindow", SubTitle="Start/Stop screen recording using active window region", Command="-ScreenRecorderActiveWindow", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "ScreenRecorderCustomRegion", SubTitle="Start/Stop screen recording using pre configured region", Command="-ScreenRecorderCustomRegion", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "StartScreenRecorder", SubTitle="Start/Stop screen recording using last region", Command="-StartScreenRecorder", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "ScreenRecorderGIF", SubTitle="Start/Stop screen recording (GIF)", Command="-ScreenRecorderGIF", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "ScreenRecorderGIFActiveWindow", SubTitle="Start/Stop screen recording (GIF) using active window region", Command="-ScreenRecorderGIFActiveWindow", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "ScreenRecorderGIFCustomRegion", SubTitle="Start/Stop screen recording (GIF) using pre configured region", Command="-ScreenRecorderGIFCustomRegion", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "StartScreenRecorderGIF", SubTitle="Start/Stop screen recording (GIF) using last region", Command="-StartScreenRecorderGIF", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "StopScreenRecording", SubTitle="Stop screen recording", Command="-StopScreenRecording", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "AbortScreenRecording", SubTitle="Abort screen recording", Command="-AbortScreenRecording", Category=SharexCommand.CategoryType.ScreenRecord, IcoPath=""},
+                new() {Title = "ColorPicker", SubTitle="Color picker", Command="-ColorPicker", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "ScreenColorPicker", SubTitle="Screen color picker", Command="-ScreenColorPicker", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "Ruler", SubTitle="Ruler", Command="-Ruler", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "ImageEditor", SubTitle="Image editor", Command="-ImageEditor", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "ImageEffects", SubTitle="Image effects", Command="-ImageEffects", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "ImageViewer", SubTitle="", Command="-ImageViewer", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "ImageCombiner", SubTitle="Image combiner", Command="-ImageCombiner", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "ImageSplitter", SubTitle="Image splitter", Command="-ImageSplitter", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "ImageThumbnailer", SubTitle="Image thumbnailer", Command="-ImageThumbnailer", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "VideoConverter", SubTitle="Video converter", Command="-VideoConverter", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "VideoThumbnailer", SubTitle="Video thumbnailer", Command="-VideoThumbnailer", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "OCR", SubTitle="Text capture (OCR)", Command="-OCR", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "QRCode", SubTitle="QR code", Command="-QRCode", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "QRCodeDecodeFromScreen", SubTitle="QR code (Decode from screen)", Command="-QRCodeDecodeFromScreen", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "HashCheck", SubTitle="Hash check", Command="-HashCheck", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "IndexFolder", SubTitle="Index folder", Command="-IndexFolder", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "ClipboardViewer", SubTitle="Clipboard viewer", Command="-ClipboardViewer", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "BorderlessWindow", SubTitle="", Command="-BorderlessWindow", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "InspectWindow", SubTitle="Inspect window", Command="-InspectWindow", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "MonitorTest", SubTitle="Monitor test", Command="-MonitorTest", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "DNSChanger", SubTitle="DNS changer", Command="-DNSChanger", Category=SharexCommand.CategoryType.Tools, IcoPath=""},
+                new() {Title = "DisableHotkeys", SubTitle="Disable/Enable hotkeys", Command="-DisableHotkeys", Category=SharexCommand.CategoryType.Other, IcoPath=""},
+                new() {Title = "OpenMainWindow", SubTitle="Open main window", Command="-OpenMainWindow", Category=SharexCommand.CategoryType.Other, IcoPath=""},
+                new() {Title = "OpenScreenshotsFolder", SubTitle="Open screenshots folder", Command="-OpenScreenshotsFolder", Category=SharexCommand.CategoryType.Other, IcoPath=""},
+                new() {Title = "OpenHistory", SubTitle="Open history window", Command="-OpenHistory", Category=SharexCommand.CategoryType.Other, IcoPath=""},
+                new() {Title = "OpenImageHistory", SubTitle="Open image history window", Command="-OpenImageHistory", Category=SharexCommand.CategoryType.Other, IcoPath=""},
+                new() {Title = "ToggleActionsToolbar", SubTitle="Toggle actions toolbar", Command="-ToggleActionsToolbar", Category=SharexCommand.CategoryType.Other, IcoPath=""},
+                new() {Title = "ToggleTrayMenu", SubTitle="Toggle tray menu", Command="-ToggleTrayMenu", Category=SharexCommand.CategoryType.Other, IcoPath=""},
+                new() {Title = "ExitShareX", SubTitle="Exit ShareX", Command="-ExitShareX", Category=SharexCommand.CategoryType.Other, IcoPath=""}
+            ];
         }
 
         public List<Result> Query(Query query)
@@ -101,14 +103,25 @@ namespace Flow.Launcher.Plugin.ShareX_Flow_Plugin
             return results;
         }
 
-        private bool RunCommand(ActionContext e, String cmd)
+        public Control CreateSettingPanel()
         {
-            //_context.API.ShowMsg("Start ShareX : " + cmd);
+            return new SettingsView(_viewModel);
+        }
+
+        private bool RunCommand(ActionContext _, string cmd)
+        {
             try
             {
-                var startInfo = new ProcessStartInfo(_sharexExe, cmd);
-                startInfo.UseShellExecute = true;
-                startInfo.WorkingDirectory = _sharexPath;
+                var extraArgs = " -silent";
+                if (_settings.AutoClose)
+                {
+                    extraArgs += " -autoclose";
+                }
+                var startInfo = new ProcessStartInfo(_sharexExe, cmd + extraArgs)
+                {
+                    UseShellExecute = true,
+                    WorkingDirectory = _settings.SharexPath
+                };
                 Process.Start(startInfo);
             }
             catch (Win32Exception w32Ex)

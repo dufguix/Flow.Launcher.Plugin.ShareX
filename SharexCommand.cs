@@ -6,23 +6,14 @@ using System.Threading.Tasks;
 
 namespace Flow.Launcher.Plugin.ShareX_Flow_Plugin
 {
-    class SharexCommand
+    public record SharexCommand
     {
-        public enum Cat {Upload, ScreenCapture, ScreenRecord, Tools, Other};
+        public enum CategoryType { Upload, ScreenCapture, ScreenRecord, Tools, Other };
 
-        public String Title
-        { get; set; }
-
-        public String SubTitle
-        { get; set; }
-
-        public String Command
-        { get; set; }
-
-        public Cat Category
-        { get; set; }
-
-        public String IcoPath
-        { get; set; }
+        public string Title { get; init; }
+        public string SubTitle { get; init; }
+        public string Command { get; init; }
+        public CategoryType Category { get; init; }
+        public string IcoPath { get; init; }
     }
 }

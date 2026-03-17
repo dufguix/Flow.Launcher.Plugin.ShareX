@@ -4,6 +4,7 @@
     <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Flow.Launcher.Plugin.ShareX_Flow_Plugin</AssemblyName>
+    <RootNamespace>Flow.Launcher.Plugin.ShareX_Flow_Plugin</RootNamespace>
     <PackageId>Flow.Launcher.Plugin.ShareX_Flow_Plugin</PackageId>
     <Authors>Dufguix</Authors>
     <PackageProjectUrl>https://github.com/Dufguix/Flow.Launcher.Plugin.ShareX_Flow_Plugin</PackageProjectUrl>
