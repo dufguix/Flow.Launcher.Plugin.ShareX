@@ -14,3 +14,6 @@ When executing commands, the plugin starts ShareX with `-silent` and optionally 
 2. Build in Release.
 3. Copy the content of `.\bin\Release\`.
 4. Paste into `C:\Users\<username>\AppData\Roaming\FlowLauncher\Plugins\ShareX`.
+
+## More
+ShareX CLI [docs](https://getsharex.com/docs/command-line-arguments)
